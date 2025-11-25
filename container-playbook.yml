@@ -1,0 +1,19 @@
+---
+- name: Setup Docker Registry
+  hosts: localhost
+  become: true
+  tasks:
+
+    - name: Pull Docker registry image
+      docker_image:
+        name: registry:2
+        source: pull
+
+    - name: Run Docker registry container
+      docker_container:
+        name: my-registry
+        image: registry:2
+        state: started
+        restart_policy: always
+        ports:
+          - "5050:5000"
