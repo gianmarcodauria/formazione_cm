@@ -19,7 +19,6 @@
           path: "."
           dockerfile: "{{ item.dockerfile }}"
         state: present
-        validate_certs: no
         docker_host: "unix:///var/run/docker.sock"
       loop: "{{ containers }}"
 
@@ -30,7 +29,6 @@
         state: started
         ports:
           - "{{ item.port }}"
-        validate_certs: no
         docker_host: "unix:///var/run/docker.sock"
       loop: "{{ containers }}"
 

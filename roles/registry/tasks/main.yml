@@ -1,0 +1,11 @@
+---
+- name: Run local registry
+  community.docker.docker_container:
+    name: "{{ registry_name }}"
+    image: registry:2
+    state: started
+    restart_policy: always
+    ports:
+      - "{{ registry_port }}:5000"
+    validate_certs: false
+

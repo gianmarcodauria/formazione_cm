@@ -1,0 +1,8 @@
+---
+ubuntu_image_name: "ubuntu-ssh"
+alma_image_name: "alma-ssh"
+
+registry_url: "localhost:5001"
+
+dockerfile_ubuntu_path: "./dockerfiles/Dockerfile_ubuntu"
+dockerfile_alma_path: "./dockerfiles/Dockerfile_almalinux"

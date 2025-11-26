@@ -1,0 +1,3 @@
+---
+registry_port: 5001
+registry_name: "local-registry"

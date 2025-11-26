@@ -1,0 +1,6 @@
+- hosts: localhost
+  gather_facts: false
+  roles:
+    - registry
+    - build_images
+    - run_containers

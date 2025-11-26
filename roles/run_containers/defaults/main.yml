@@ -1,0 +1,6 @@
+---
+ubuntu_port: 2224
+alma_port: 2225
+
+ubuntu_image: "localhost:5001/ubuntu-ssh:latest"
+alma_image: "localhost:5001/alma-ssh:latest"

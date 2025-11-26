@@ -1,0 +1,25 @@
+---
+- name: Build Ubuntu SSH image (docker)
+  community.docker.docker_image:
+    name: "{{ ubuntu_image_name }}"
+    tag: latest
+    source: build
+    build:
+      path: "{{ dockerfile_ubuntu_path | dirname }}"
+      dockerfile: "{{ dockerfile_ubuntu_path | basename }}"
+    push: true
+    repository: "{{ registry_url }}/{{ ubuntu_image_name }}"
+    validate_certs: false
+
+- name: Build AlmaLinux SSH image (docker)
+  community.docker.docker_image:
+    name: "{{ alma_image_name }}"
+    tag: latest
+    source: build
+    build:
+      path: "{{ dockerfile_alma_path | dirname }}"
+      dockerfile: "{{ dockerfile_alma_path | basename }}"
+    push: true
+    repository: "{{ registry_url }}/{{ alma_image_name }}"
+    validate_certs: false
+

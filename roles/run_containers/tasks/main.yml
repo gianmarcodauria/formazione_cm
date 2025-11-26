@@ -1,0 +1,19 @@
+---
+- name: Run Ubuntu SSH container
+  community.docker.docker_container:
+    name: ubuntu-ssh
+    image: "{{ ubuntu_image }}"
+    state: started
+    ports:
+      - "{{ ubuntu_port }}:22"
+    validate_certs: false
+
+- name: Run AlmaLinux SSH container
+  community.docker.docker_container:
+    name: alma-ssh
+    image: "{{ alma_image }}"
+    state: started
+    ports:
+      - "{{ alma_port }}:22"
+    validate_certs: false
+
