@@ -1,0 +1,26 @@
+FROM almalinux:9
+
+# Install SSH server e sudo
+RUN dnf install -y openssh-server sudo && \
+    dnf clean all && \
+    mkdir /var/run/sshd && \
+    ssh-keygen -A
+
+# Utente
+RUN useradd -m -s /bin/bash genericuser && \
+    echo "genericuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Config SSH
+RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config && \
+    sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
+    echo "AllowUsers genericuser" >> /etc/ssh/sshd_config
+
+# Chiave pubblica
+RUN mkdir /home/genericuser/.ssh && chmod 700 /home/genericuser/.ssh
+COPY ssh_keys/id_rsa.pub /home/genericuser/.ssh/authorized_keys
+RUN chmod 600 /home/genericuser/.ssh/authorized_keys && \
+    chown -R genericuser:genericuser /home/genericuser/.ssh
+
+EXPOSE 22
+CMD ["/usr/sbin/sshd","-D"]
+

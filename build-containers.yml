@@ -1,0 +1,36 @@
+- name: Build and run SSH containers
+  hosts: localhost
+  gather_facts: false
+  vars:
+    containers:
+      - name: ubuntu-ssh
+        dockerfile: dockerfiles/Dockerfile_ubuntu
+        port: "2224:22"
+      - name: alma-ssh
+        dockerfile: dockerfiles/Dockerfile_almalinux
+        port: "2225:22"
+
+  tasks:
+    - name: Build Docker images
+      community.docker.docker_image:
+        name: "{{ item.name }}"
+        source: build
+        build:
+          path: "."
+          dockerfile: "{{ item.dockerfile }}"
+        state: present
+        validate_certs: no
+        docker_host: "unix:///var/run/docker.sock"
+      loop: "{{ containers }}"
+
+    - name: Run Docker containers
+      community.docker.docker_container:
+        name: "{{ item.name }}"
+        image: "{{ item.name }}"
+        state: started
+        ports:
+          - "{{ item.port }}"
+        validate_certs: no
+        docker_host: "unix:///var/run/docker.sock"
+      loop: "{{ containers }}"
+
