@@ -17,7 +17,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}", "-f dockerfiles/Dockerfile_ubuntu dockerfiles")
+                    docker.build("${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}", "-f dockerfiles/Dockerfile_almalinux dockerfiles")
                 }
             }
         }
@@ -30,12 +30,12 @@ pipeline {
             }
         }
 
-        stage('Push to Registry') {
+        stage('Push') {
             steps {
                 script {
-                    // Non serve login perché il registry è locale e senza auth
-                    sh "docker push ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
-                    sh "docker push ${REGISTRY}/${IMAGE_NAME}:latest"
+                    // forzare HTTP locale senza login
+                    sh "docker push ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} --disable-content-trust=false"
+                    sh "docker push ${REGISTRY}/${IMAGE_NAME}:latest --disable-content-trust=false"
                 }
             }
         }
