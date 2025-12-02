@@ -30,10 +30,10 @@ pipeline {
             }
         }
 
-        stage('Login and Push') {
+        stage('Push to Registry') {
             steps {
                 script {
-                    sh "docker login ${REGISTRY} -u <username> -p <password>"
+                    // Non serve login perché il registry è locale e senza auth
                     sh "docker push ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
                     sh "docker push ${REGISTRY}/${IMAGE_NAME}:latest"
                 }
