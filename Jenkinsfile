@@ -16,8 +16,10 @@ pipeline {
                     def buildNumber = env.BUILD_NUMBER
                     // build immagine usando il Dockerfile corretto
                     dockerImage = docker.build(
-                        "${REGISTRY}/${IMAGE_NAME}:${buildNumber}", 
-                        "${CONTEXT_PATH} -f ${DOCKERFILE_PATH}"
+    "${REGISTRY}/${IMAGE_NAME}:${buildNumber}", 
+    "-f /var/jenkins_home/dockerfiles/Dockerfile_almalinux /var/jenkins_home/dockerfiles"
+)
+
                     )
                 }
             }
