@@ -17,7 +17,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}", "-f dockerfiles/Dockerfile_almalinux dockerfiles")
+                    docker.build("${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}", "-f dockerfiles/Dockerfile_ubuntu dockerfiles")
                 }
             }
         }
