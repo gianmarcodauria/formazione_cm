@@ -1,23 +1,28 @@
 FROM ubuntu:22.04
 
-RUN apt-get update && apt-get install -y openssh-server sudo && \
-    mkdir /var/run/sshd
+RUN apt-get update && \
+    apt-get install -y openssh-server sudo docker.io && \
+    mkdir -p /var/run/sshd && \
+    ssh-keygen -A
 
-# Utente
-RUN useradd -m -s /bin/bash genericuser && \
-    echo "genericuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+# Utente per Jenkins
+RUN useradd -m -s /bin/bash jenkins && \
+    echo "jenkins ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # SSH config
 RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config && \
     sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
-    echo "AllowUsers genericuser" >> /etc/ssh/sshd_config
+    echo "AllowUsers jenkins" >> /etc/ssh/sshd_config
 
-# Chiave pubblica
-RUN mkdir /home/genericuser/.ssh && chmod 700 /home/genericuser/.ssh
-COPY ssh_keys/id_rsa.pub /home/genericuser/.ssh/authorized_keys
-RUN chmod 600 /home/genericuser/.ssh/authorized_keys && \
-    chown -R genericuser:genericuser /home/genericuser/.ssh
+# Chiave SSH
+RUN mkdir -p /home/jenkins/.ssh && chmod 700 /home/jenkins/.ssh
+COPY ssh_keys/id_rsa.pub /home/jenkins/.ssh/authorized_keys
+RUN chmod 600 /home/jenkins/.ssh/authorized_keys && \
+    chown -R jenkins:jenkins /home/jenkins/.ssh
+
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 22
-CMD ["/usr/sbin/sshd","-D"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 

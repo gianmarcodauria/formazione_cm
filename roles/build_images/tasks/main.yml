@@ -1,5 +1,6 @@
 ---
-- name: Build Ubuntu SSH image (docker)
+# Build Ubuntu SSH (Step 2)
+- name: Build Ubuntu SSH image
   community.docker.docker_image:
     name: "{{ ubuntu_image_name }}"
     tag: latest
@@ -11,7 +12,8 @@
     repository: "{{ registry_url }}/{{ ubuntu_image_name }}"
     validate_certs: false
 
-- name: Build AlmaLinux SSH image (docker)
+# Build AlmaLinux SSH (Step 2)
+- name: Build AlmaLinux SSH image
   community.docker.docker_image:
     name: "{{ alma_image_name }}"
     tag: latest
@@ -21,5 +23,31 @@
       dockerfile: "{{ dockerfile_alma_path | basename }}"
     push: true
     repository: "{{ registry_url }}/{{ alma_image_name }}"
+    validate_certs: false
+
+# Build Ubuntu Jenkins (Step 5)
+- name: Build Ubuntu Jenkins/Docker image
+  community.docker.docker_image:
+    name: ubuntu-jenkins
+    tag: latest
+    source: build
+    build:
+      path: "{{ dockerfile_ubuntu_path | dirname }}"
+      dockerfile: "Dockerfile_ubuntu"
+    push: true
+    repository: "{{ registry_url }}/ubuntu-jenkins"
+    validate_certs: false
+
+# Build AlmaLinux Jenkins (Step 5)
+- name: Build AlmaLinux Jenkins/Docker image
+  community.docker.docker_image:
+    name: almalinux-jenkins
+    tag: latest
+    source: build
+    build:
+      path: "{{ dockerfile_alma_path | dirname }}"
+      dockerfile: "Dockerfile_almalinux"
+    push: true
+    repository: "{{ registry_url }}/almalinux-jenkins"
     validate_certs: false
 

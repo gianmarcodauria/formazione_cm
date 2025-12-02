@@ -1,4 +1,5 @@
 ---
+# Step 2 containers (unchanged)
 - name: Run Ubuntu SSH container
   community.docker.docker_container:
     name: ubuntu-ssh
@@ -16,4 +17,27 @@
     ports:
       - "{{ alma_port }}:22"
     validate_certs: false
+
+# Step 5 Jenkins containers
+- name: Run Ubuntu Jenkins/Docker container
+  community.docker.docker_container:
+    name: ubuntu-jenkins
+    image: "{{ registry_url }}/ubuntu-jenkins:latest"
+    state: started
+    privileged: true
+    volumes:
+      - "/var/lib/docker"
+    ports:
+      - "2222:22"
+
+- name: Run AlmaLinux Jenkins/Docker container
+  community.docker.docker_container:
+    name: almalinux-jenkins
+    image: "{{ registry_url }}/almalinux-jenkins:latest"
+    state: started
+    privileged: true
+    volumes:
+      - "/var/lib/docker"
+    ports:
+      - "2223:22"
 
